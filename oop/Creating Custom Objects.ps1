@@ -102,6 +102,55 @@ Get-Date
 
 1..2|ForEach-Object {'begin'} {'Process A'}{'Process B'} {'end'}
 
+## Foreach script block
+
+1..2 | ForEach-Object {'begin'}{'Process'}
+
+## Parallel processing
+##version 7 only
+Get-Command ForEach-Object -Syntax
+## the underscore area to represtn t the curretn input object in bock
+
+# $message="output:"
+# 1..8 | ForEach-Object -Parallel {
+#     "$using: message $_"
+#     Start-Sleep 1
+# } -ThrottleLimit 4
+
+## Comparing Objects
+Compare-Object -ReferenceObject (Get-Content -Path C:\dev\06\powershell\events.txt) 
+            -DifferenceObject (Get-Content -Path C:\dev\06\powershell\events1.txt) 
+
+help Compare-Object 
+## Comparing Two Sets of Objects
+
+$a = Get-Process
+notepad; calc
+$b= Get-Process
+
+Compare-Object $a $b
+Compare-Object $a $b -ExcludeDifferent
+Compare-Object $a $b -PassThru
+
+## Tee object
+Get-Process | Out-File -FilePath  C:\dev\06\powershell\events.txt
+Get-Content C:\dev\06\powershell\events.txt
+
+Get-Process | Tee-Object -FilePath  C:\dev\06\powershell\events1.txt
+Get-Process notepad
+## save into varialbe proc
+Get-Process notepad| Tee-Object -Variable proc | Select-object ProcessName, handles
+
+
+## output file send output to a file
+Get-ChildItem C:\dev\06\powershell -File -System -Recurse
+Get-ChildItem . -File -System -Recurse|Tee-Object -FilePath C:\dev\06\powershell\events.txt -Append | Out-File C:\dev\06\powershell\events1.txt
+
+##select object rando only
+1..10 | Get-Random
+1..10 | Get-Random -Count 3
+
+
 
 
 
