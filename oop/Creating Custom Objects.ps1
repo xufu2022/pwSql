@@ -61,6 +61,47 @@ Get-Content c:\powershell\test.txt | sort-object -Property @{
 
 
 
+# Group
+
+Get-ChildItem $PSHOME
+$files=Get-ChildItem $PSHOME
+
+$files | Group-Object -Property Extension -NoElement |Sort-Object Count -Descending
+
+1..20 | Group-Object -Property {$_ % 3}
+Get-Process | Group-Object -Property Name -NoElement | Where-Object {$_.count -gt 1}
+
+## group in hasttable
+
+Get-Command get-*, set-* -CommandType cmdlet
+Get-Command get-*, set-* -CommandType cmdlet | Group-Object Verb -AsHashTable -AsString
+
+$a=Get-Command get-*, set-* -CommandType cmdlet | Group-Object Verb -AsHashTable -AsString
+$a.set
+
+# Get  length of all files in directory
+
+Get-ChildItem $PSHOME | ForEach-Object -Process {
+    if (!$_.psiscontainer){
+        $_.Name;
+        $_.Length/1024;
+        ""
+    }
+}
+
+# Begin/End Block
+
+Get-EventLog -LogName system -newHost 1000
+
+$events | ForEach-Object -Begin{
+Get-Date
+} -Process {
+    Out-Fil -FilePath "C:\dev\06\powershell\events.txt"
+    -Append -InputObject $_.message
+} -End{Get-Date}
+
+1..2|ForEach-Object {'begin'} {'Process A'}{'Process B'} {'end'}
+
 
 
 
